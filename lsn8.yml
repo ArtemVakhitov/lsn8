@@ -81,5 +81,4 @@
         name: artemvakhitov/lsn8
         push: true
         source: build
-        build:
-          path: /tmp/hello
+        path: /tmp/hello
