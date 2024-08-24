@@ -62,7 +62,7 @@
     - name: Login to Docker Hub
       docker_login:
         username: artemvakhitov
-        password: {{ lookup('env', 'DOCKER_PASSWORD') }}
+        password: "{{ lookup('env', 'DOCKER_PASSWORD') }}"
 
     - name: Build and push the Docker image
       docker_image:
