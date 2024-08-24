@@ -70,6 +70,7 @@
       environment:
         PYTHONPATH: "{{ lookup('env','PYTHONPATH') }}:/usr/local/lib/python2.7/dist-packages:/usr/local/lib/python2.7/site-packages"
       docker_login:
+        email: artem.vakhitov@gmail.com
         username: artemvakhitov
         password: "{{ lookup('env', 'DOCKER_PASSWORD') }}"
 
