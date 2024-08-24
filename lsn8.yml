@@ -81,3 +81,17 @@
         name: artemvakhitov/lsn8
         push: true
         path: /tmp/hello
+
+- name: Pull and run the Docker image of boxfuse
+  hosts: prod
+  become: true
+
+  tasks:
+    - name: Pull and run the Docker image of boxfuse
+      docker_container:
+        name: boxfuse
+        image: artemvakhitov/lsn8:latest
+        ports: 8080:8080
+        pull: true
+        detach: true
+        state: started
