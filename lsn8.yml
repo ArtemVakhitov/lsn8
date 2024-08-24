@@ -43,7 +43,6 @@
       git:
         repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
         dest: /tmp/hello/boxfuse-sample-java-war-hello
-#       version: main
         update: true
 
     - name: Build the app
