@@ -16,11 +16,11 @@
 
   tasks:
     - name: Ensure the git and maven packages are present
-        apt:
-          name:
-            - git
-            - maven
-          state: present
+      apt:
+        name:
+          - git
+          - maven
+        state: present
 
 - name: Clone the boxfuse repo and build the app
   hosts: build
@@ -33,16 +33,16 @@
         state: directory
 
     - name: Clone the boxfuse repo
-        git:
-          repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
-          dest: /tmp/hello/boxfuse-sample-java-war-hello
-          version: main
-          update: true
+      git:
+        repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
+        dest: /tmp/hello/boxfuse-sample-java-war-hello
+        version: main
+        update: true
 
     - name: Build the app
-        command:
-          cmd: mvn package
-          chdir: /tmp/hello/boxfuse-sample-java-war-hello
+      command:
+        cmd: mvn package
+        chdir: /tmp/hello/boxfuse-sample-java-war-hello
 
 - name: Build and push a Docker image of boxfuse
   hosts: build
@@ -50,9 +50,9 @@
 
   tasks:
     - name: Copy Dockerfile
-        copy:
-          src: Dockerfile
-          dest: /tmp/hello
+      copy:
+        src: Dockerfile
+        dest: /tmp/hello
 
     - name: Ensure the Docker password is set as envvar
       fail: 
@@ -60,14 +60,14 @@
       when: lookup('env', 'DOCKER_PASSWORD') is not defined
 
     - name: Login to Docker Hub
-        docker_login:
-          username: artemvakhitov
-          password: {{ lookup('env', 'DOCKER_PASSWORD') }}
+      docker_login:
+        username: artemvakhitov
+        password: {{ lookup('env', 'DOCKER_PASSWORD') }}
 
     - name: Build and push the Docker image
-        docker_image:
-          name: artemvakhitov/lsn8
-          push: true
-          source: build
-          build:
-            path: /tmp/hello
+      docker_image:
+        name: artemvakhitov/lsn8
+        push: true
+        source: build
+        build:
+          path: /tmp/hello
