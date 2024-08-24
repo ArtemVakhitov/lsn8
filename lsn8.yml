@@ -80,5 +80,4 @@
       docker_image:
         name: artemvakhitov/lsn8
         push: true
-        source: build
         path: /tmp/hello
