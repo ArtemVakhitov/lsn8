@@ -4,11 +4,18 @@
   become: true
 
   tasks:
-    - name: Ensure docker.io package is present
+    - name: Ensure docker.io and pip packages are present
       apt:
-        name: docker.io
+        name:
+          - docker.io
+          - python-pip
         state: present
         update_cache: true # Do it once for all
+
+    - name: Ensure pip docker-py package is installed
+      pip:
+        name: docker-py
+        state: present
 
 - name: Provision git and maven
   hosts: build
