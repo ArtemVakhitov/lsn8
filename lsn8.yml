@@ -67,7 +67,7 @@
       when: lookup('env', 'DOCKER_PASSWORD') is not defined
 
     - name: Login to Docker Hub
-      environment:
+      environment: # May be needed just in case here and below
         PYTHONPATH: "{{ lookup('env','PYTHONPATH') }}:/usr/local/lib/python2.7/dist-packages:/usr/local/lib/python2.7/site-packages"
       docker_login:
         email: artem.vakhitov@gmail.com
