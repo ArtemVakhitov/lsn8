@@ -1,0 +1,73 @@
+---
+- name: Provision Docker
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Ensure docker.io package is present
+      apt:
+        name: docker.io
+        state: present
+        update_cache: true # Do it once for all
+
+- name: Provision git and maven
+  hosts: build
+  become: true
+
+  tasks:
+    - name: Ensure the git and maven packages are present
+        apt:
+          name:
+            - git
+            - maven
+          state: present
+
+- name: Clone the boxfuse repo and build the app
+  hosts: build
+  become: true
+
+  tasks:
+    - name: Ensure the /tmp/hello directory is present
+      file:
+        path: /tmp/hello
+        state: directory
+
+    - name: Clone the boxfuse repo
+        git:
+          repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
+          dest: /tmp/hello/boxfuse-sample-java-war-hello
+          version: main
+          update: true
+
+    - name: Build the app
+        command:
+          cmd: mvn package
+          chdir: /tmp/hello/boxfuse-sample-java-war-hello
+
+- name: Build and push a Docker image of boxfuse
+  hosts: build
+  become: true
+
+  tasks:
+    - name: Copy Dockerfile
+        copy:
+          src: Dockerfile
+          dest: /tmp/hello
+
+    - name: Ensure the Docker password is set as envvar
+      fail: 
+        msg: "Please set DOCKER_PASSWORD"
+      when: lookup('env', 'DOCKER_PASSWORD') is not defined
+
+    - name: Login to Docker Hub
+        docker_login:
+          username: artemvakhitov
+          password: {{ lookup('env', 'DOCKER_PASSWORD') }}
+
+    - name: Build and push the Docker image
+        docker_image:
+          name: artemvakhitov/lsn8
+          push: true
+          source: build
+          build:
+            path: /tmp/hello
